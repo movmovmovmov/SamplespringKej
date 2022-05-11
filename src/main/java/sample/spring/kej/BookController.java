@@ -1,4 +1,5 @@
 package sample.spring.kej;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,18 @@ public class BookController {
 			String bookId = map.get("bookId").toString();
 			mav.setViewName("redirect:/detail?bookId=" + bookId);
 		}
+		return mav;
+	}
+	
+	@RequestMapping(value = "list")
+	public ModelAndView list(@RequestParam Map<String, Object> map) {
+		List<Map<String, Object>> list = this.bookService.list(map); //책 목록을 데이터베이스에서 가지고 온다.
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("data", list); //데이터를 뷰에 전달할 수 있게 mav 객체에 넣는다.
+		if (map.containsKey("keyword")) { //키워드 파라미터가 있다면 뷰의 검색 상자에 보여지게 됨
+			mav.addObject("keyword", map.get("keyword"));
+		}
+		mav.setViewName("/book/list" ); 
 		return mav;
 	}
 }

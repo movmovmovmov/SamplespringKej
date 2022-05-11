@@ -2,56 +2,76 @@
 <!DOCTYPE  mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- /create에서 제목, 분류, 가격을 입력하고 저장버튼 누르면 서버가 할 일이 뭐게? -->
 <mapper namespace="book">
-<insert id="insert" parameterType="hashMap" useGeneratedKeys="true" keyProperty="book_id">  
-    <![CDATA[
-    insert into book
-    (title, category, price) 
-    values
-    (#{title}, #{category}, #{price})
-    ]]>
-</insert>
-<select id="select_detail" parameterType="hashMap" resultType="hashMap">
-    <![CDATA[
-        select
-        title,
-        category,
-        price,
- insert_date
-        from
-        book
-        where
-        book_id = #{bookId}   
-    ]]>
-</select>
-<update id="update" parameterType="hashMap">
-	<![CDATA[  
-	update book set  
-	title = #{title},  
-	category = #{category},  
-	price = #{price}  
-	where  
-	book_id = #{bookId}  
-	]]>  
-</update>  
-<delete id="delete" parameterType="hashMap">  
-	<![CDATA[  
-	delete from book  
-	where  
-	book_id = #{bookId}  
-	]]>  
-</delete>
-<!-- 리스트를 위해서, 쿼리 정렬을 사용함 orderby 작은 순서는 desc 대신 asc -->
-<select id="select_list" parameterType="hashMap" resultType="hashMap">  
-	<![CDATA[  
-	select  
-	book_id,  
-	title,  
-	category,  
-	price,  
-	insert_date  
-	from  
-	book  
-	order by insert_date desc  
-	]]>  
-</select>  
+	<insert id="insert" parameterType="hashMap" useGeneratedKeys="true" keyProperty="book_id">  
+	    <![CDATA[
+	    insert into book
+	    (title, category, price) 
+	    values
+	    (#{title}, #{category}, #{price})
+	    ]]>
+	</insert>
+	<select id="select_detail" parameterType="hashMap" resultType="hashMap">
+	    <![CDATA[
+	        select
+	        title,
+	        category,
+	        price,
+	 insert_date
+	        from
+	        book
+	        where
+	        book_id = #{bookId}   
+	    ]]>
+	</select>
+	<update id="update" parameterType="hashMap">
+		<![CDATA[  
+		update book set  
+		title = #{title},  
+		category = #{category},  
+		price = #{price}  
+		where  
+		book_id = #{bookId}  
+		]]>  
+	</update>  
+	<delete id="delete" parameterType="hashMap">  
+		<![CDATA[  
+		delete from book  
+		where  
+		book_id = #{bookId}  
+		]]>  
+	</delete>
+	<!-- 리스트를 위해서, 쿼리 정렬을 사용함 orderby 작은 순서는 desc 대신 asc -->
+	<select id="select_list" parameterType="hashMap" resultType="hashMap">  
+		<![CDATA[  
+		select  
+		book_id,  
+		title,  
+		category,  
+		price,  
+		insert_date  
+		from  
+		book  
+		order by insert_date desc  
+		]]>  
+	</select>
+	<select id="select_list" parameterType="hashMap" resultType="hashMap"> 
+	<!-- where 1 =1 은 관습적인 구문이다. 1 = 1은 늘 참이기 때문에 검색 조건을 무조건 and로 연결하기 위해 사용한다.--> 
+	<!-- if문은 마이바티스에서 조건을 나타낸다. test는 조건 규칙을 나타내는 항목이다. -->
+	<!-- 키워드가 있으면 if안의 쿼리문이 DB 쿼리문에 포함, 동적쿼리 -->
+		<![CDATA[  
+		select  
+		book_id,  
+		title,  
+		category,  
+		price,  
+		insert_date  
+		from  
+		book  
+		where 1 = 1  
+		]]>  
+		<if test="keyword != null and keyword != ''">  
+		and (title like CONCAT('%',#{keyword},'%') or category like CONCAT('%',#{keyword},'%'))  
+		</if>  
+		order by insert_date desc  
+	</select>  
 </mapper>

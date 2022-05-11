@@ -1,4 +1,5 @@
 package sample.spring.kej;
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -27,7 +28,8 @@ public class BookDao {
 	public int delete(Map<String, Object> map) {
 		return this.sqlSessionTemplate.delete("book.delete", map);
 	}
+	//첫번째 파라미터는 쿼리id, 두번째는 쿼리 파라미터다.
 	public List<Map<String, Object>> selectList(Map<String, Object> map) {
-		return this.sqlSessionTemplate.select
+		return this.sqlSessionTemplate.selectList("book.select_list", map);
 	}
 }
